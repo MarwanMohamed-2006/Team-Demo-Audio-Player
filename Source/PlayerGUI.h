@@ -1,4 +1,5 @@
 #pragma once // PlayerGUI.h
+//  PlayerGUI.h ////
 #include <JuceHeader.h>
 #include "PlayerAudio.h"
 using namespace std;
