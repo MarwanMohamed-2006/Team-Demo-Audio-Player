@@ -1,0 +1,30 @@
+# Build directories
+Build/
+build/
+*.build/
+*.xcodeproj/
+*.xcworkspace/
+
+# Binaries
+*.app
+*.exe
+*.dll
+*.so
+*.dylib
+
+# IDE files
+.vs/
+*.suo
+*.sln
+*.vcxproj*
+*.VC.db
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# JUCE specific
+JuceLibraryCode/
+
+# Dependencies (if using git submodules or external libs)
+# Modules/
