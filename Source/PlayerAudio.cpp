@@ -1,6 +1,5 @@
 ﻿#include "PlayerAudio.h"
 
-
 PlayerAudio::PlayerAudio()
 {
     formatManager.registerBasicFormats();
@@ -19,7 +18,13 @@ void PlayerAudio::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferTo
 {
     transportSource.getNextAudioBlock(bufferToFill);
 
-    if (looping && transportSource.hasStreamFinished())
+   
+    if (abLoopEnabled && transportSource.getCurrentPosition() > loopEndTime)
+    {
+        transportSource.setPosition(loopStartTime);
+        transportSource.start();
+    }
+    else if (looping && !abLoopEnabled && transportSource.hasStreamFinished())
     {
         transportSource.setPosition(0.0);
         transportSource.start();
@@ -37,7 +42,7 @@ bool PlayerAudio::loadFile(const juce::File& file)
     {
         if (auto* reader = formatManager.createReaderFor(file))
         {
-            // 🔑 Disconnect old source first
+            // Disconnect old source first
             transportSource.stop();
             transportSource.setSource(nullptr);
             readerSource.reset();
@@ -50,11 +55,14 @@ bool PlayerAudio::loadFile(const juce::File& file)
                 0,
                 nullptr,
                 reader->sampleRate);
-            transportSource.start();
-        }
-        return true;
 
+            loopEndTime = getLength();
+
+            transportSource.start();
+            return true; 
+        }
     }
+    return false;
 }
 
 void PlayerAudio::start()
@@ -66,18 +74,22 @@ void PlayerAudio::stop()
 {
     transportSource.stop();
 }
+
 void PlayerAudio::setGain(float gain)
 {
     transportSource.setGain(gain);
 }
+
 void PlayerAudio::setPosition(double pos)
 {
     transportSource.setPosition(pos);
 }
+
 double PlayerAudio::getPosition() const
 {
     return transportSource.getCurrentPosition();
 }
+
 double PlayerAudio::getLength() const
 {
     return transportSource.getLengthInSeconds();
@@ -101,4 +113,44 @@ void PlayerAudio::setLooping(bool shouldLoop)
 bool PlayerAudio::isLooping() const
 {
     return looping;
+}
+
+void PlayerAudio::set_start(double startTime)
+{
+    loopStartTime = juce::jlimit(0.0, getLength(), startTime);
+}
+
+void PlayerAudio::set_end(double endTime)
+{
+    loopEndTime = juce::jlimit(0.0, getLength(), endTime);
+}
+
+void PlayerAudio::enableABLoop(bool enable)
+{
+    abLoopEnabled = enable;
+    if (enable)
+        looping = false;
+}
+
+bool PlayerAudio::isABLoopEnabled() const
+{
+    return abLoopEnabled;
+}
+
+double PlayerAudio::getLoopStart() const
+{
+    return loopStartTime;
+}
+
+double PlayerAudio::getLoopEnd() const
+{
+    return loopEndTime;
+}
+
+void PlayerAudio::clearABLoop()
+{
+    abLoopEnabled = false;
+    loopStartTime = 0.0;
+    double length = getLength();
+    loopEndTime = length > 0.0 ? length : 0.0;
 }

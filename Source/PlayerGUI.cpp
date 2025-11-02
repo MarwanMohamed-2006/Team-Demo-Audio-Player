@@ -6,11 +6,15 @@ using namespace juce;
 PlayerGUI::PlayerGUI()
 {
     // Add buttons
-    for (auto* btn : { &loadButton, &endButton , &stopButton , &playButton , &muteButton, &gotostartButton, })
+    for (auto* btn : { &loadButton, &endButton , &stopButton , &playButton , &muteButton, &gotostartButton,&setA_Button, &setB_Button, &clearABButton })
     {
         btn->addListener(this);
         addAndMakeVisible(btn);
     }
+
+    // A-B loop buttons
+    runABButton.addListener(this);
+    addAndMakeVisible(runABButton);
 
     // position slider
     positionSlider.setRange(0.0, 1.0, 0.001);
@@ -25,8 +29,6 @@ PlayerGUI::PlayerGUI()
     timeLabel.setJustificationType(juce::Justification::centred);
     timeLabel.setColour(juce::Label::textColourId, juce::Colours::white);
     addAndMakeVisible(timeLabel);
-
-
 
     // Volume slider
     volumeSlider.setRange(0.0, 1.0, 0.01);
@@ -58,7 +60,20 @@ PlayerGUI::PlayerGUI()
             playerAudio.setLooping(isLooping);
         };
     addAndMakeVisible(&loopButton);
+
+    runABButton.onClick = [this]()
+        {
+            bool abEnabled = runABButton.getToggleState();
+            playerAudio.enableABLoop(abEnabled);
+            if (abEnabled)
+            {
+                loopButton.setToggleState(false, juce::sendNotification);
+                playerAudio.setLooping(false);
+            }
+            repaint();
+        };
 }
+
 PlayerGUI::~PlayerGUI()
 {
 }
@@ -77,11 +92,6 @@ void PlayerGUI::releaseResources()
 {
     playerAudio.releaseResources();
 }
-void PlayerGUI::paint(juce::Graphics& g)
-{
-    g.fillAll(juce::Colours::darkgrey);
-}
-
 
 void PlayerGUI::resized()
 {
@@ -94,15 +104,14 @@ void PlayerGUI::resized()
     gotostartButton.setBounds(640, y, 100, 40);
     loopButton.setBounds(760, y, 80, 40);
 
-    /*prevButton.setBounds(340, y, 80, 40);
-    nextButton.setBounds(440, y, 80, 40);*/
-
     volumeSlider.setBounds(500, 50, getWidth() - 40, 100);
     positionSlider.setBounds(20, 150, getWidth() - 40, 30);
     timeLabel.setBounds(20, 185, getWidth() - 40, 20);
 
-
-
+    setA_Button.setBounds(860, y, 80, 40);
+    setB_Button.setBounds(960, y, 80, 40);
+    clearABButton.setBounds(1060, y, 100, 40);
+    runABButton.setBounds(1160, y, 100, 40);
 }
 
 void PlayerGUI::buttonClicked(juce::Button* button)
@@ -126,10 +135,14 @@ void PlayerGUI::buttonClicked(juce::Button* button)
                 if (file.existsAsFile())
                 {
                     playerAudio.loadFile(file);
+                    setAMarker = false;
+                    setBMarker = false;
+                    aMarkerPos = -1.0;
+                    bMarkerPos = -1.0;
+                    repaint();
                 }
             });
     }
-
 
     if (button == &stopButton)
     {
@@ -142,21 +155,50 @@ void PlayerGUI::buttonClicked(juce::Button* button)
         playerAudio.start();
     }
 
-
     if (button == &muteButton)
     {
         playerAudio.mute();
     }
+
     if (button == &gotostartButton) {
         playerAudio.start();
         playerAudio.setPosition(0.0);
     }
+
     if (button == &endButton) {
         playerAudio.getLength();
         playerAudio.setPosition(playerAudio.getLength());
     }
-}
 
+    if (button == &setA_Button)
+    {
+        double currentPos = playerAudio.getPosition();
+        playerAudio.set_start(currentPos);
+        aMarkerPos = playerAudio.startpercentage();
+        setAMarker = true; 
+        repaint();
+    }
+
+    if (button == &setB_Button)
+    {
+        double currentPos = playerAudio.getPosition();
+        playerAudio.set_end(currentPos);
+        bMarkerPos = playerAudio.endpercentage();
+        setBMarker = true; 
+        repaint();
+    }
+
+    if (button == &clearABButton)
+    {
+        playerAudio.clearABLoop();
+        runABButton.setToggleState(false, juce::sendNotification);
+        setAMarker = false;
+        setBMarker = false;
+        aMarkerPos = -1.0;
+        bMarkerPos = -1.0;
+        repaint();
+    }
+}
 
 void PlayerGUI::sliderValueChanged(juce::Slider* slider)
 {
@@ -177,6 +219,7 @@ void PlayerGUI::sliderValueChanged(juce::Slider* slider)
         }
     }
 }
+
 void PlayerGUI::timerCallback()
 {
     double length = playerAudio.getLength();
@@ -189,11 +232,31 @@ void PlayerGUI::timerCallback()
         {
             positionSlider.setValue(new_pos);
         }
+
         juce::String currentTime = formatTime(current_pos);
         juce::String totalTime = formatTime(length);
         timeLabel.setText(currentTime + " / " + totalTime, juce::dontSendNotification);
+
+        if (setAMarker)
+        {
+            aMarkerPos = playerAudio.startpercentage();
+        }
+        if (setBMarker)
+        {
+            bMarkerPos = playerAudio.endpercentage();
+        }
+        }
+    else
+    {
+        setAMarker = false;
+        setBMarker = false;
+        aMarkerPos = -1.0;
+        bMarkerPos = -1.0;
     }
+
+    repaint();
 }
+
 juce::String PlayerGUI::formatTime(double seconds)
 {
     int totalSeconds = static_cast<int>(seconds);
@@ -201,4 +264,46 @@ juce::String PlayerGUI::formatTime(double seconds)
     int secs = totalSeconds % 60;
 
     return juce::String::formatted("%02d:%02d", minutes, secs);
+}
+
+void PlayerGUI::paint(juce::Graphics& g)
+{
+    g.fillAll(juce::Colours::darkgrey);
+
+    if (setAMarker && aMarkerPos >= 0.0)
+    {
+        auto sliderBounds = positionSlider.getBounds().toFloat();
+        const float aX = sliderBounds.getX() + (sliderBounds.getWidth() * aMarkerPos);
+
+        g.setColour(Colours::green);
+        g.drawLine(aX, sliderBounds.getY(), aX, sliderBounds.getBottom(), 3.0f);
+
+        g.setColour(Colours::white);
+        g.setFont(12.0f);
+        g.drawText("A", aX - 10, sliderBounds.getY() - 20, 20, 15, Justification::centred);
+    }
+
+    if (setBMarker && bMarkerPos >= 0.0)
+    {
+        auto sliderBounds = positionSlider.getBounds().toFloat();
+        const float bX = sliderBounds.getX() + (sliderBounds.getWidth() * bMarkerPos);
+
+        g.setColour(Colours::red);
+        g.drawLine(bX, sliderBounds.getY(), bX, sliderBounds.getBottom(), 3.0f);
+
+        g.setColour(Colours::white);
+        g.setFont(12.0f);
+        g.drawText("B", bX - 10, sliderBounds.getY() - 20, 20, 15, Justification::centred);
+    }
+
+    if (setAMarker && setBMarker &&aMarkerPos >= 0.0 && bMarkerPos >= 0.0 &&aMarkerPos < bMarkerPos &&
+        playerAudio.isABLoopEnabled())
+    {
+        auto sliderBounds = positionSlider.getBounds().toFloat();
+        const float startX = sliderBounds.getX() + (sliderBounds.getWidth() * aMarkerPos);
+        const float endX = sliderBounds.getX() + (sliderBounds.getWidth() * bMarkerPos);
+
+        g.setColour(Colours::yellow.withAlpha(0.3f));
+        g.fillRect(startX, sliderBounds.getY(), endX - startX, sliderBounds.getHeight());
+    }
 }

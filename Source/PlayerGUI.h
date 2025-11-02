@@ -1,4 +1,4 @@
-#pragma once // PlayerGUI.h
+﻿#pragma once // PlayerGUI.h
 #include <JuceHeader.h>
 #include "PlayerAudio.h"
 using namespace std;
@@ -34,9 +34,19 @@ private:
 	ToggleButton loopButton{ "Loop" };
 	bool isLooping = false;
 
+	TextButton setA_Button{ "Set A" };
+	TextButton setB_Button{ "Set B" };
+	TextButton clearABButton{ "Clear A-B" };
+	ToggleButton runABButton{ "A-B Loop" };
+
 	juce::Slider volumeSlider;
 	juce::Slider positionSlider;
 	juce::Label timeLabel;
+
+	bool setAMarker = false;
+	bool setBMarker = false;
+	double aMarkerPos = -1.0;
+	double bMarkerPos  = -1.0;
 
 	bool isDraggingPosition = false;
 

@@ -20,12 +20,34 @@ public:
 	void unmute();
 	void setLooping(bool shouldLoop);
 	bool isLooping() const;
+
+	void set_start(double startTime);
+	void set_end(double endTime);
+	void enableABLoop(bool enable);
+	bool isABLoopEnabled() const;
+	double getLoopStart() const;
+	double getLoopEnd() const;
+	void clearABLoop();
+
+	double startpercentage() const
+	{
+		double length = getLength();
+		return length > 0.0 ? loopStartTime / length : 0.0;
+	}
+
+	double endpercentage() const
+	{
+		double length = getLength();
+		return length > 0.0 ? loopEndTime / length : 0.0;
+	}
 private:
 	juce::AudioFormatManager formatManager;
 	std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
 	juce::AudioTransportSource transportSource;
 	bool looping = false;
-
+	bool abLoopEnabled = false;
+	double loopStartTime = 0.0;
+	double loopEndTime = 0.0;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PlayerAudio)
 };
