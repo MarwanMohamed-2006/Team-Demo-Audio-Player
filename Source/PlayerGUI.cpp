@@ -12,7 +12,7 @@ PlayerGUI::PlayerGUI()
         addAndMakeVisible(btn);
     }
 
-    // A-B loop buttons
+    // A-B run checkbox
     runABButton.addListener(this);
     addAndMakeVisible(runABButton);
 

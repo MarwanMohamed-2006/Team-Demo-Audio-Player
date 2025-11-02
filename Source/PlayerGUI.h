@@ -39,9 +39,9 @@ private:
 	TextButton clearABButton{ "Clear A-B" };
 	ToggleButton runABButton{ "A-B Loop" };
 
-	juce::Slider volumeSlider;
-	juce::Slider positionSlider;
-	juce::Label timeLabel;
+	Slider volumeSlider;
+	Slider positionSlider;
+	Label timeLabel;
 
 	bool setAMarker = false;
 	bool setBMarker = false;
