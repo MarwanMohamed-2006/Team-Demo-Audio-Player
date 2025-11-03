@@ -1,7 +1,7 @@
 ﻿#include "PlayerGUI.h"
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
-//aliiiiiiiiiiii
+
 using namespace std;
 using namespace juce;
 
@@ -172,7 +172,7 @@ void PlayerGUI::buttonClicked(juce::Button* button)
     if (button == &stopButton)
     {
         playerAudio.stop();
-        playerAudio.setPosition(0.0);
+
     }
 
     if (button == &playButton)
