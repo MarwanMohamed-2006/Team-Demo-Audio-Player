@@ -40,7 +40,6 @@ public:
 
 
 
-
 	double startpercentage() const
 
 
