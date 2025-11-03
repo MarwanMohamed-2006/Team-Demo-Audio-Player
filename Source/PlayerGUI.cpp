@@ -1,6 +1,7 @@
 ﻿#include "PlayerGUI.h"
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
+//aliiiiiiiiiiii
 using namespace std;
 using namespace juce;
 
@@ -15,11 +16,11 @@ PlayerGUI::PlayerGUI()
 
     addAndMakeVisible(metadataLabel);
     metadataLabel.setText("No file loaded", juce::dontSendNotification);
-    metadataLabel.setJustificationType(juce::Justification::centredLeft); // Aligned left to read easily
+    metadataLabel.setJustificationType(juce::Justification::centredLeft); 
     metadataLabel.setColour(juce::Label::textColourId, juce::Colours::yellow);
     addAndMakeVisible(metadataLabel);
 
-    // Set up the callback to receive and display metadata
+    
     playerAudio.onMetadataLoaded = [this](const juce::String& title, const juce::String& artist)
         {
             juce::String metadata = artist.isEmpty() ? title : (title + " - " + artist);

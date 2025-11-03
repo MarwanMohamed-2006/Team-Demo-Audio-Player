@@ -162,11 +162,11 @@ void PlayerAudio::extractMetadata(const juce::File& file)
     TagLib::FileRef f(file.getFullPathName().toRawUTF8());
 
     
-    if (f.isNull() || f.tag()->isEmpty()) // Check if file is null or tag is empty
+    if (f.isNull() || f.tag()->isEmpty())
     {
         
         if (onMetadataLoaded)
-            onMetadataLoaded(file.getFileNameWithoutExtension(), "Unknown Artist"); // Default values
+            onMetadataLoaded(file.getFileNameWithoutExtension(), "Unknown Artist");
     }
     else
     {
