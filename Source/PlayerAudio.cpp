@@ -1,5 +1,6 @@
 ﻿#include "PlayerAudio.h"
-
+#include <taglib/fileref.h>
+#include <taglib/tag.h>
 PlayerAudio::PlayerAudio()
 {
     formatManager.registerBasicFormats();
@@ -154,3 +155,31 @@ void PlayerAudio::clearABLoop()
     double length = getLength();
     loopEndTime = length > 0.0 ? length : 0.0;
 }
+
+
+void PlayerAudio::extractMetadata(const juce::File& file)
+{
+    TagLib::FileRef f(file.getFullPathName().toRawUTF8());
+
+    
+    if (f.isNull() || f.tag()->isEmpty()) // Check if file is null or tag is empty
+    {
+        
+        if (onMetadataLoaded)
+            onMetadataLoaded(file.getFileNameWithoutExtension(), "Unknown Artist"); // Default values
+    }
+    else
+    {
+       
+        juce::String title = f.tag()->title().isEmpty() ? file.getFileNameWithoutExtension() : juce::String::fromUTF8(f.tag()->title().toCString(true));
+        juce::String artist = juce::String::fromUTF8(f.tag()->artist().toCString(true));
+
+        if (onMetadataLoaded)
+            onMetadataLoaded(title, artist);
+    }
+    
+}
+
+
+
+

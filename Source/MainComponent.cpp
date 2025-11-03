@@ -1,4 +1,6 @@
 ﻿#include "MainComponent.h"
+#include <taglib/fileref.h>
+#include <taglib/tag.h>
 
 MainComponent::MainComponent()
 {
@@ -33,3 +35,4 @@ void MainComponent::resized()
 {
     player1.setBounds(getLocalBounds());
 }
+

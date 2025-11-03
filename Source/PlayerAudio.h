@@ -1,5 +1,7 @@
 #pragma once // PlayerAudio.h
 #include <JuceHeader.h>
+#include <taglib/fileref.h>
+#include <taglib/tag.h>
 class PlayerAudio
 {
 public:
@@ -9,7 +11,7 @@ public:
 	void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill);
 	void releaseResources();
 
-	bool loadFile(const juce::File& file);
+    bool loadFile(const juce::File& file);
 	void start();
 	void stop();
 	void setGain(float gain);
@@ -29,7 +31,20 @@ public:
 	double getLoopEnd() const;
 	void clearABLoop();
 
+	void loadFile_2(const juce::File& file);
+	
+	std::function<void(const juce::String& title,
+		const juce::String& artist)> onMetadataLoaded;
+
+	void extractMetadata(const juce::File& file);
+
+
+
+
 	double startpercentage() const
+
+
+
 	{
 		double length = getLength();
 		return length > 0.0 ? loopStartTime / length : 0.0;
@@ -48,6 +63,12 @@ private:
 	bool abLoopEnabled = false;
 	double loopStartTime = 0.0;
 	double loopEndTime = 0.0;
+
+	double durationINsecond = 0.0;
+	juce::String artist;
+	juce::String title;
+	
+	
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PlayerAudio)
 };

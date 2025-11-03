@@ -1,6 +1,8 @@
 ﻿#pragma once // PlayerGUI.h
 #include <JuceHeader.h>
 #include "PlayerAudio.h"
+#include <taglib/fileref.h>
+#include <taglib/tag.h>
 using namespace std;
 using namespace juce;
 
@@ -42,6 +44,7 @@ private:
 	Slider volumeSlider;
 	Slider positionSlider;
 	Label timeLabel;
+	Label metadataLabel;
 
 	bool setAMarker = false;
 	bool setBMarker = false;

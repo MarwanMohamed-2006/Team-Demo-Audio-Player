@@ -1,5 +1,6 @@
 ﻿#include "PlayerGUI.h"
-
+#include <taglib/fileref.h>
+#include <taglib/tag.h>
 using namespace std;
 using namespace juce;
 
@@ -11,6 +12,20 @@ PlayerGUI::PlayerGUI()
         btn->addListener(this);
         addAndMakeVisible(btn);
     }
+
+    addAndMakeVisible(metadataLabel);
+    metadataLabel.setText("No file loaded", juce::dontSendNotification);
+    metadataLabel.setJustificationType(juce::Justification::centredLeft); // Aligned left to read easily
+    metadataLabel.setColour(juce::Label::textColourId, juce::Colours::yellow);
+    addAndMakeVisible(metadataLabel);
+
+    // Set up the callback to receive and display metadata
+    playerAudio.onMetadataLoaded = [this](const juce::String& title, const juce::String& artist)
+        {
+            juce::String metadata = artist.isEmpty() ? title : (title + " - " + artist);
+            metadataLabel.setText("Now Playing: " + metadata, juce::dontSendNotification);
+        };
+
 
     // A-B run checkbox
     runABButton.addListener(this);
@@ -112,6 +127,8 @@ void PlayerGUI::resized()
     setB_Button.setBounds(960, y, 80, 40);
     clearABButton.setBounds(1060, y, 100, 40);
     runABButton.setBounds(1160, y, 100, 40);
+
+    metadataLabel.setBounds(20, y + 50, getWidth() - 40, 30);
 }
 
 void PlayerGUI::buttonClicked(juce::Button* button)
@@ -140,6 +157,13 @@ void PlayerGUI::buttonClicked(juce::Button* button)
                     aMarkerPos = -1.0;
                     bMarkerPos = -1.0;
                     repaint();
+
+                    playerAudio.loadFile(file);
+                
+                    playerAudio.extractMetadata(file);
+                   
+                    setAMarker = false;
+
                 }
             });
     }
@@ -307,3 +331,4 @@ void PlayerGUI::paint(juce::Graphics& g)
         g.fillRect(startX, sliderBounds.getY(), endX - startX, sliderBounds.getHeight());
     }
 }
+
