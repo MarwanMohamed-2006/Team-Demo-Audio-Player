@@ -1,6 +1,6 @@
 ﻿#include <JuceHeader.h>
 #include "MainComponent.h"
-
+//ali
 // Our application class
 class SimpleAudioPlayer : public juce::JUCEApplication
 {
