@@ -172,7 +172,7 @@ void PlayerGUI::buttonClicked(juce::Button* button)
     if (button == &stopButton)
     {
         playerAudio.stop();
-        playerAudio.setPosition(0.0);
+
     }
 
     if (button == &playButton)
