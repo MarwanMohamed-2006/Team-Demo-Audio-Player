@@ -141,6 +141,10 @@ PlayerGUI::PlayerGUI()
         };
     addAndMakeVisible(&muteButton);
 
+    //display progress bar
+    startTimerHz(20);
+    addAndMakeVisible(display);
+
     // loop button
     loopButton.addListener(this);
     addAndMakeVisible(loopButton);
@@ -199,6 +203,7 @@ void PlayerGUI::resized()
     volumeSlider.setBounds(500, 50, getWidth() - 40, 100);
 	speedSlider.setBounds(700, 50, getWidth() - 40, 100);
     positionSlider.setBounds(20, 150, getWidth() - 40, 30);
+	display.setBounds(20, 120, getWidth() - 40, 20);
     timeLabel.setBounds(20, 185, getWidth() - 40, 20);
 
     setA_Button.setBounds(860, y, 80, 40);
@@ -422,4 +427,14 @@ void PlayerGUI::paint(juce::Graphics& g)
         g.setColour(Colours::yellow.withAlpha(0.3f));
         g.fillRect(startX, sliderBounds.getY(), endX - startX, sliderBounds.getHeight());
     }
+}
+
+void PlayerGUI::timerCallback()
+{
+    double position = playerAudio.getPosition();
+    double length = playerAudio.getLength();
+    if (length > 0.0)
+        progressvalue = position / length;
+    else
+        progressvalue = 0.0;
 }

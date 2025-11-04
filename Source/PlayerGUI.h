@@ -21,6 +21,8 @@ public:
 
 	void resized() override;
 	void paint(Graphics& g) override;
+	void timerCallback() override;
+
 
 	void prepareToPlay(int samplesPerBlockExpected, double sampleRate);
 	void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill);
@@ -29,8 +31,11 @@ public:
 	void timerCallback() override;
 
 private:
+
 	PlayerAudio playerAudio;
-	// GUI elements
+	double progressvalue = 0.0;
+
+	// GUI elements;
 	TextButton stopButton{ "Stop" };
 	TextButton playButton{ "play" };
 	TextButton loadButton{ "Load File" };
@@ -50,6 +55,7 @@ private:
 	Slider positionSlider;
 	Label timeLabel;
 	Label metadataLabel;
+	ProgressBar display{ progressvalue };
 
 	bool setAMarker = false;
 	bool setBMarker = false;
