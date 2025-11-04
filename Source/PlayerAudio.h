@@ -2,6 +2,9 @@
 #include <JuceHeader.h>
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
+#include <vector>
+#include <functional>
+
 class PlayerAudio
 {
 public:
@@ -30,7 +33,7 @@ public:
 	double getLoopStart() const;
 	double getLoopEnd() const;
 	void clearABLoop();
-
+	juce::String getWildcardFiles() const;
 	void loadFile_2(const juce::File& file);
 	
 	std::function<void(const juce::String& title,
@@ -38,7 +41,9 @@ public:
 
 	void extractMetadata(const juce::File& file);
 
-
+	std::vector<juce::File>& getPlaylist() { return playlist; }
+	void addFilesToPlaylist(const juce::Array<juce::File>& files);
+	void loadAndPlayFile(int index);
 
 	double startpercentage() const
 
@@ -67,7 +72,8 @@ private:
 	juce::String artist;
 	juce::String title;
 	
-	
+	std::vector<juce::File> playlist;
+	int currentFileIndex = -1;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PlayerAudio)
 };

@@ -1,10 +1,15 @@
-﻿#pragma once // PlayerGUI.h
+﻿#pragma once 
 #include <JuceHeader.h>
 #include "PlayerAudio.h"
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
 using namespace std;
 using namespace juce;
+
+
+class PlayerAudio;
+class PlaylistListBoxModel;
+
 
 class PlayerGUI : public juce::Component,
 	public Button::Listener,
@@ -54,10 +59,16 @@ private:
 	bool isDraggingPosition = false;
 
 	std::unique_ptr<juce::FileChooser> fileChooser;
-	// Event handlers
+	
 	void buttonClicked(Button* button) override;
 	void sliderValueChanged(Slider* slider) override;
 	juce::String formatTime(double seconds);
+
+	juce::ListBox playlistListBox;
+	std::unique_ptr<PlaylistListBoxModel> playlistModel;
+
+	
+
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PlayerGUI)
 
 };

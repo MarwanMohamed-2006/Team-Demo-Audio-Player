@@ -1,18 +1,83 @@
 ﻿#include "PlayerGUI.h"
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
+#include <juce_gui_basics/juce_gui_basics.h>
+#include <memory>
 
 using namespace std;
 using namespace juce;
 
+
+
+
+
+
+class PlaylistListBoxModel : public juce::ListBoxModel
+{
+public:
+    PlaylistListBoxModel(PlayerAudio& audio) : playerAudio(audio) {}
+
+    int getNumRows() override
+    {
+        // The number of rows is the size of the playlist in PlayerAudio
+        return (int)playerAudio.getPlaylist().size();
+    }
+
+    void paintListBoxItem(int rowNumber, juce::Graphics& g,
+        int width, int height, bool rowIsSelected) override
+    {
+        if (rowIsSelected)
+            g.fillAll(juce::Colours::blue.withAlpha(0.5f)); // Highlight selection
+
+        if (rowNumber < getNumRows())
+        {
+            // Display filename without extension
+            const juce::File& file = playerAudio.getPlaylist()[rowNumber];
+            g.setColour(juce::Colours::white);
+            g.setFont(height * 0.7f);
+            g.drawText(file.getFileNameWithoutExtension(),
+                5, 0, width - 10, height,
+                juce::Justification::centredLeft, true);
+        }
+    }
+
+    void selectedRowsChanged(int lastRowSelected) override
+    {
+        // When a row is selected (clicked), load and play that file
+        if (lastRowSelected >= 0)
+        {
+            playerAudio.loadAndPlayFile(lastRowSelected);
+        }
+    }
+
+
+private:
+
+    PlayerAudio& playerAudio;
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PlaylistListBoxModel)
+};
+
+
+
+
 PlayerGUI::PlayerGUI()
+    : playlistModel(std::make_unique<PlaylistListBoxModel>(playerAudio))
 {
     // Add buttons
     for (auto* btn : { &loadButton, &endButton , &stopButton , &playButton , &muteButton, &gotostartButton,&setA_Button, &setB_Button, &clearABButton })
+    
     {
         btn->addListener(this);
         addAndMakeVisible(btn);
     }
+
+   
+
+    playlistListBox.setModel(playlistModel.get());
+    addAndMakeVisible(playlistListBox);
+
+   
+
 
     addAndMakeVisible(metadataLabel);
     metadataLabel.setText("No file loaded", juce::dontSendNotification);
@@ -92,6 +157,7 @@ PlayerGUI::PlayerGUI()
 
 PlayerGUI::~PlayerGUI()
 {
+   
 }
 
 void PlayerGUI::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
@@ -130,40 +196,52 @@ void PlayerGUI::resized()
     runABButton.setBounds(1160, y, 100, 40);
 
     metadataLabel.setBounds(20, y + 50, getWidth() - 40, 30);
+    playlistListBox.setBounds(20,250, getWidth()-40, 150);
 }
 
 void PlayerGUI::buttonClicked(juce::Button* button)
 {
     if (button == &loadButton)
     {
-        juce::FileChooser chooser("Select audio files...",
-            juce::File{},
-            "*.wav;*.mp3");
+        juce::File startDir = juce::File::getSpecialLocation(juce::File::userHomeDirectory);
 
-        fileChooser = std::make_unique<juce::FileChooser>(
-            "Select an audio file...",
-            juce::File{},
-            "*.wav;*.mp3");
+        fileChooser.reset(new juce::FileChooser(
+            "Select Audio Files to add to Playlist",
+            startDir, 
+            playerAudio.getWildcardFiles()
+        ));
+        
 
         fileChooser->launchAsync(
-            juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles,
+            juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles | juce::FileBrowserComponent::canSelectMultipleItems,
+            // -----------------------------------------
+            
             [this](const juce::FileChooser& fc)
             {
-                auto file = fc.getResult();
-                if (file.existsAsFile())
+                auto files = fc.getResults(); // Get ALL selected files
+                if (files.size() > 0)
                 {
-                    playerAudio.loadFile(file);
+                    size_t initialSize = playerAudio.getPlaylist().size();
+
+                    // Add files to the audio model
+                    playerAudio.addFilesToPlaylist(files);
+
+                    // Force the ListBox to refresh its contents
+                    playlistListBox.updateContent();
+
+                    // If the playlist was previously empty, load and play the first file
+                    if (initialSize == 0)
+                    {
+                        playerAudio.loadAndPlayFile(0);
+                        playlistListBox.selectRow(0); // Highlight the first file
+                    }
+
+                    // Reset markers
                     setAMarker = false;
                     setBMarker = false;
                     aMarkerPos = -1.0;
                     bMarkerPos = -1.0;
                     repaint();
-
-                    playerAudio.loadFile(file);
-                
-                    playerAudio.extractMetadata(file);
-                   
-                    setAMarker = false;
 
                 }
             });

@@ -182,5 +182,37 @@ void PlayerAudio::extractMetadata(const juce::File& file)
 }
 
 
+juce::String PlayerAudio::getWildcardFiles() const
+{
+ 
+    return formatManager.getWildcardForAllFormats();
+}
+
+void PlayerAudio::addFilesToPlaylist(const juce::Array<juce::File>& files)
+{
+    for (const auto& file : files)
+    {
+       
+        if (formatManager.createReaderFor(file))
+        {
+            playlist.push_back(file);
+        }
+    }
+}
+void PlayerAudio::loadAndPlayFile(int index)
+{
+    if (index >= 0 && index < (int)playlist.size())
+    {
+        currentFileIndex = index;
+        const juce::File& fileToLoad = playlist[index];
+
+        if (loadFile(fileToLoad)) 
+        {
+           
+            extractMetadata(fileToLoad);
+        }
+    }
+}
+
 
 
