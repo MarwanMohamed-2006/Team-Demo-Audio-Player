@@ -1,4 +1,5 @@
-﻿#include "PlayerGUI.h"
+﻿
+#include "PlayerGUI.h"
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
 #include <juce_gui_basics/juce_gui_basics.h>
@@ -65,27 +66,27 @@ PlayerGUI::PlayerGUI()
 {
     // Add buttons
     for (auto* btn : { &loadButton, &endButton , &stopButton , &playButton , &muteButton, &gotostartButton,&setA_Button, &setB_Button, &clearABButton })
-    
+
     {
         btn->addListener(this);
         addAndMakeVisible(btn);
     }
 
-   
+
 
     playlistListBox.setModel(playlistModel.get());
     addAndMakeVisible(playlistListBox);
 
-   
+
 
 
     addAndMakeVisible(metadataLabel);
     metadataLabel.setText("No file loaded", juce::dontSendNotification);
-    metadataLabel.setJustificationType(juce::Justification::centredLeft); 
+    metadataLabel.setJustificationType(juce::Justification::centredLeft);
     metadataLabel.setColour(juce::Label::textColourId, juce::Colours::yellow);
     addAndMakeVisible(metadataLabel);
 
-    
+
     playerAudio.onMetadataLoaded = [this](const juce::String& title, const juce::String& artist)
         {
             juce::String metadata = artist.isEmpty() ? title : (title + " - " + artist);
@@ -118,6 +119,15 @@ PlayerGUI::PlayerGUI()
     volumeSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
     volumeSlider.setSliderStyle(juce::Slider::LinearVertical);
     addAndMakeVisible(volumeSlider);
+
+
+    // Speed slider
+    speedSlider.setRange(0.5, 2.0, 0.01);
+    speedSlider.setValue(1);
+    speedSlider.addListener(this);
+	speedSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
+	speedSlider.setSliderStyle(juce::Slider::LinearVertical);
+    addAndMakeVisible(speedSlider);
 
     // muted button 
     muteButton.setButtonText("Mute");
@@ -157,7 +167,7 @@ PlayerGUI::PlayerGUI()
 
 PlayerGUI::~PlayerGUI()
 {
-   
+
 }
 
 void PlayerGUI::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
@@ -187,6 +197,7 @@ void PlayerGUI::resized()
     loopButton.setBounds(760, y, 80, 40);
 
     volumeSlider.setBounds(500, 50, getWidth() - 40, 100);
+	speedSlider.setBounds(700, 50, getWidth() - 40, 100);
     positionSlider.setBounds(20, 150, getWidth() - 40, 30);
     timeLabel.setBounds(20, 185, getWidth() - 40, 20);
 
@@ -196,7 +207,7 @@ void PlayerGUI::resized()
     runABButton.setBounds(1160, y, 100, 40);
 
     metadataLabel.setBounds(20, y + 50, getWidth() - 40, 30);
-    playlistListBox.setBounds(20,250, getWidth()-40, 150);
+    playlistListBox.setBounds(20, 250, getWidth() - 40, 150);
 }
 
 void PlayerGUI::buttonClicked(juce::Button* button)
@@ -207,15 +218,15 @@ void PlayerGUI::buttonClicked(juce::Button* button)
 
         fileChooser.reset(new juce::FileChooser(
             "Select Audio Files to add to Playlist",
-            startDir, 
+            startDir,
             playerAudio.getWildcardFiles()
         ));
-        
+
 
         fileChooser->launchAsync(
             juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles | juce::FileBrowserComponent::canSelectMultipleItems,
             // -----------------------------------------
-            
+
             [this](const juce::FileChooser& fc)
             {
                 auto files = fc.getResults(); // Get ALL selected files
@@ -278,7 +289,7 @@ void PlayerGUI::buttonClicked(juce::Button* button)
         double currentPos = playerAudio.getPosition();
         playerAudio.set_start(currentPos);
         aMarkerPos = playerAudio.startpercentage();
-        setAMarker = true; 
+        setAMarker = true;
         repaint();
     }
 
@@ -287,7 +298,7 @@ void PlayerGUI::buttonClicked(juce::Button* button)
         double currentPos = playerAudio.getPosition();
         playerAudio.set_end(currentPos);
         bMarkerPos = playerAudio.endpercentage();
-        setBMarker = true; 
+        setBMarker = true;
         repaint();
     }
 
@@ -321,6 +332,8 @@ void PlayerGUI::sliderValueChanged(juce::Slider* slider)
             }
         }
     }
+    if (slider == &speedSlider)
+        playerAudio.setSpeed((float)slider->getValue());
 }
 
 void PlayerGUI::timerCallback()
@@ -348,7 +361,7 @@ void PlayerGUI::timerCallback()
         {
             bMarkerPos = playerAudio.endpercentage();
         }
-        }
+    }
     else
     {
         setAMarker = false;
@@ -399,7 +412,7 @@ void PlayerGUI::paint(juce::Graphics& g)
         g.drawText("B", bX - 10, sliderBounds.getY() - 20, 20, 15, Justification::centred);
     }
 
-    if (setAMarker && setBMarker &&aMarkerPos >= 0.0 && bMarkerPos >= 0.0 &&aMarkerPos < bMarkerPos &&
+    if (setAMarker && setBMarker && aMarkerPos >= 0.0 && bMarkerPos >= 0.0 && aMarkerPos < bMarkerPos &&
         playerAudio.isABLoopEnabled())
     {
         auto sliderBounds = positionSlider.getBounds().toFloat();
@@ -410,4 +423,3 @@ void PlayerGUI::paint(juce::Graphics& g)
         g.fillRect(startX, sliderBounds.getY(), endX - startX, sliderBounds.getHeight());
     }
 }
-

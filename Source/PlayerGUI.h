@@ -1,5 +1,4 @@
-﻿#pragma once 
-#include <JuceHeader.h>
+﻿#include <JuceHeader.h>
 #include "PlayerAudio.h"
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
@@ -47,6 +46,7 @@ private:
 	ToggleButton runABButton{ "A-B Loop" };
 
 	Slider volumeSlider;
+	Slider speedSlider;
 	Slider positionSlider;
 	Label timeLabel;
 	Label metadataLabel;
@@ -54,12 +54,12 @@ private:
 	bool setAMarker = false;
 	bool setBMarker = false;
 	double aMarkerPos = -1.0;
-	double bMarkerPos  = -1.0;
+	double bMarkerPos = -1.0;
 
 	bool isDraggingPosition = false;
 
 	std::unique_ptr<juce::FileChooser> fileChooser;
-	
+
 	void buttonClicked(Button* button) override;
 	void sliderValueChanged(Slider* slider) override;
 	juce::String formatTime(double seconds);
@@ -67,7 +67,7 @@ private:
 	juce::ListBox playlistListBox;
 	std::unique_ptr<PlaylistListBoxModel> playlistModel;
 
-	
+
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PlayerGUI)
 

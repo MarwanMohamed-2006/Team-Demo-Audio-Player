@@ -14,13 +14,14 @@ PlayerAudio::~PlayerAudio()
 void PlayerAudio::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
     transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
+	resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 
 void PlayerAudio::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
 {
-    transportSource.getNextAudioBlock(bufferToFill);
+    resampleSource.getNextAudioBlock(bufferToFill);
 
-   
+
     if (abLoopEnabled && transportSource.getCurrentPosition() > loopEndTime)
     {
         transportSource.setPosition(loopStartTime);
@@ -36,6 +37,7 @@ void PlayerAudio::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferTo
 void PlayerAudio::releaseResources()
 {
     transportSource.releaseResources();
+	resampleSource.releaseResources();
 }
 
 bool PlayerAudio::loadFile(const juce::File& file)
@@ -61,7 +63,7 @@ bool PlayerAudio::loadFile(const juce::File& file)
             loopEndTime = getLength();
 
             transportSource.start();
-            return true; 
+            return true;
         }
     }
     return false;
@@ -117,6 +119,11 @@ bool PlayerAudio::isLooping() const
     return looping;
 }
 
+void PlayerAudio::setSpeed(double speed)
+{
+    resampleSource.setResamplingRatio(speed);
+}
+
 void PlayerAudio::set_start(double startTime)
 {
     loopStartTime = juce::jlimit(0.0, getLength(), startTime);
@@ -162,29 +169,29 @@ void PlayerAudio::extractMetadata(const juce::File& file)
 {
     TagLib::FileRef f(file.getFullPathName().toRawUTF8());
 
-    
+
     if (f.isNull() || f.tag()->isEmpty())
     {
-        
+
         if (onMetadataLoaded)
             onMetadataLoaded(file.getFileNameWithoutExtension(), "Unknown Artist");
     }
     else
     {
-       
+
         juce::String title = f.tag()->title().isEmpty() ? file.getFileNameWithoutExtension() : juce::String::fromUTF8(f.tag()->title().toCString(true));
         juce::String artist = juce::String::fromUTF8(f.tag()->artist().toCString(true));
 
         if (onMetadataLoaded)
             onMetadataLoaded(title, artist);
     }
-    
+
 }
 
 
 juce::String PlayerAudio::getWildcardFiles() const
 {
- 
+
     return formatManager.getWildcardForAllFormats();
 }
 
@@ -192,7 +199,7 @@ void PlayerAudio::addFilesToPlaylist(const juce::Array<juce::File>& files)
 {
     for (const auto& file : files)
     {
-       
+
         if (formatManager.createReaderFor(file))
         {
             playlist.push_back(file);
@@ -206,13 +213,10 @@ void PlayerAudio::loadAndPlayFile(int index)
         currentFileIndex = index;
         const juce::File& fileToLoad = playlist[index];
 
-        if (loadFile(fileToLoad)) 
+        if (loadFile(fileToLoad))
         {
-           
+
             extractMetadata(fileToLoad);
         }
     }
 }
-
-
-

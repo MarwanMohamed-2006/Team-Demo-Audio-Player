@@ -14,7 +14,7 @@ public:
 	void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill);
 	void releaseResources();
 
-    bool loadFile(const juce::File& file);
+	bool loadFile(const juce::File& file);
 	void start();
 	void stop();
 	void setGain(float gain);
@@ -25,7 +25,7 @@ public:
 	void unmute();
 	void setLooping(bool shouldLoop);
 	bool isLooping() const;
-
+	void setSpeed(double speed);
 	void set_start(double startTime);
 	void set_end(double endTime);
 	void enableABLoop(bool enable);
@@ -35,7 +35,7 @@ public:
 	void clearABLoop();
 	juce::String getWildcardFiles() const;
 	void loadFile_2(const juce::File& file);
-	
+
 	std::function<void(const juce::String& title,
 		const juce::String& artist)> onMetadataLoaded;
 
@@ -63,6 +63,7 @@ private:
 	juce::AudioFormatManager formatManager;
 	std::unique_ptr<juce::AudioFormatReaderSource> readerSource;
 	juce::AudioTransportSource transportSource;
+	juce::ResamplingAudioSource resampleSource{ &transportSource, false, 2 };
 	bool looping = false;
 	bool abLoopEnabled = false;
 	double loopStartTime = 0.0;
@@ -71,7 +72,7 @@ private:
 	double durationINsecond = 0.0;
 	juce::String artist;
 	juce::String title;
-	
+
 	std::vector<juce::File> playlist;
 	int currentFileIndex = -1;
 
