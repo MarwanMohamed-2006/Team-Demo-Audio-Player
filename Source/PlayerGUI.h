@@ -22,13 +22,14 @@ public:
 	void resized() override;
 	void paint(Graphics& g) override;
 	void timerCallback() override;
+	void updateProgressBar();
+	
+	
 
 
 	void prepareToPlay(int samplesPerBlockExpected, double sampleRate);
 	void getNextAudioBlock(const AudioSourceChannelInfo& bufferToFill);
 	void releaseResources();
-
-	void timerCallback() override;
 
 private:
 

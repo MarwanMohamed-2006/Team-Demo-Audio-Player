@@ -374,8 +374,21 @@ void PlayerGUI::timerCallback()
         aMarkerPos = -1.0;
         bMarkerPos = -1.0;
     }
+    
+
+	updateProgressBar();
 
     repaint();
+}
+
+void PlayerGUI::updateProgressBar()
+{
+    double position = playerAudio.getPosition();
+    double length = playerAudio.getLength();
+    if (length > 0.0)
+        progressvalue = position / length;
+    else
+        progressvalue = 0.0;
 }
 
 juce::String PlayerGUI::formatTime(double seconds)
@@ -429,12 +442,4 @@ void PlayerGUI::paint(juce::Graphics& g)
     }
 }
 
-void PlayerGUI::timerCallback()
-{
-    double position = playerAudio.getPosition();
-    double length = playerAudio.getLength();
-    if (length > 0.0)
-        progressvalue = position / length;
-    else
-        progressvalue = 0.0;
-}
+
