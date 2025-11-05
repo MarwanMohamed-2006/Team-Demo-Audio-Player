@@ -15,7 +15,7 @@ public:
 
     int getNumRows() override
     {
-        // The number of rows is the size of the playlist in PlayerAudio//
+        // The number of rows is the size of the playlist in PlayerAudio
         return (int)playerAudio.getPlaylist().size();
     }
 
@@ -60,7 +60,7 @@ PlayerGUI::PlayerGUI()
     : playlistModel(std::make_unique<PlaylistListBoxModel>(playerAudio))
 {
     // Add buttons
-    for (auto* btn : { &loadButton, &endButton , &stopButton , &playButton , &muteButton, &gotostartButton,&setA_Button, &setB_Button, &clearABButton,&reset_speed })
+    for (auto* btn : { &loadButton, &endButton ,  &playPauseButton , &muteButton, &gotostartButton,&setA_Button, &setB_Button, &clearABButton,&reset_speed })
 
     {
         btn->addListener(this);
@@ -188,15 +188,16 @@ void PlayerGUI::resized()
 {
     int y = 20;
     loadButton.setBounds(20, y, 100, 40);
-    stopButton.setBounds(240, y, 80, 40);
+    playPauseButton.setBounds(240, y, 80, 40);
     muteButton.setBounds(340, y, 80, 40);
-    playButton.setBounds(440, y, 80, 40);
     endButton.setBounds(540, y, 80, 40);
     gotostartButton.setBounds(640, y, 100, 40);
     loopButton.setBounds(760, y, 80, 40);
+    reset_speed.setBounds(getWidth() - 160, 125, 80, 30);  
 
-    volumeSlider.setBounds(900, 50, 50, 100);
-    speedSlider.setBounds(950, 50, 50, 100);
+
+    volumeSlider.setBounds(getWidth() - 200, 30, 50, 100);
+    speedSlider.setBounds(getWidth() - 150, 30, 50, 100);   
     positionSlider.setBounds(20, 150, getWidth() - 40, 30);
     display.setBounds(20, 210, getWidth() - 40, 20);
     timeLabel.setBounds(20, 185, getWidth() - 40, 20);
@@ -258,15 +259,20 @@ void PlayerGUI::buttonClicked(juce::Button* button)
             });
     }
 
-    if (button == &stopButton)
+    if (button == &playPauseButton)
     {
-        playerAudio.stop();
-
-    }
-
-    if (button == &playButton)
-    {
-        playerAudio.start();
+        if (isPlaying)
+        {
+            playerAudio.stop();
+            playPauseButton.setButtonText("Play");
+            isPlaying = false; 
+        }
+        else
+        {
+            playerAudio.start();
+            playPauseButton.setButtonText("Pause");
+            isPlaying = true; 
+        }
     }
 
     if (button == &muteButton)
