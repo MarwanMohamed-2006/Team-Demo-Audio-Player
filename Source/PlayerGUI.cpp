@@ -65,8 +65,14 @@ PlayerGUI::PlayerGUI()
     {
         btn->addListener(this);
         addAndMakeVisible(btn);
+        btn->setColour(juce::TextButton::textColourOffId, juce::Colours::black);
+        btn->setColour(juce::TextButton::buttonColourId, juce::Colours::white);
     }
-
+   
+    loopButton.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
+    loopButton.setColour(juce::TextButton::buttonColourId, juce::Colours::white);
+    runABButton.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
+    runABButton.setColour(juce::TextButton::buttonColourId, juce::Colours::white);
 
 
     playlistListBox.setModel(playlistModel.get());
@@ -112,7 +118,7 @@ PlayerGUI::PlayerGUI()
     volumeSlider.setValue(0.5);
     volumeSlider.addListener(this);
     volumeSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
-    volumeSlider.setSliderStyle(juce::Slider::LinearVertical);
+    volumeSlider.setSliderStyle(juce::Slider::LinearBarVertical);
     addAndMakeVisible(volumeSlider);
 
 
@@ -127,6 +133,9 @@ PlayerGUI::PlayerGUI()
     muteButton.setButtonText("Mute");
     muteButton.setToggleState(true, juce::dontSendNotification);
     muteButton.setClickingTogglesState(true);
+    muteButton.setColour(juce::TextButton::buttonOnColourId, juce::Colours::red);
+    muteButton.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
+
 
     muteButton.onClick = [this]() {
         const bool ismuted = muteButton.getToggleState();
@@ -195,7 +204,7 @@ void PlayerGUI::resized()
     reset_speed.setBounds(getWidth() - 160, 125, 80, 30);  
 
 
-    volumeSlider.setBounds(getWidth() - 200, 30, 50, 100);
+    volumeSlider.setBounds(getWidth() - 200, 30, 20, 100);
     speedSlider.setBounds(getWidth() - 150, 30, 50, 100);
     positionSlider.setBounds(20, 150, getWidth() - 40, 30);
     display.setBounds(20, 210, getWidth() - 40, 20);

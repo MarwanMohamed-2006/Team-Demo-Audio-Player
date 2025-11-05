@@ -32,10 +32,10 @@ public:
 	void releaseResources();
 
 private:
-
+	bool isPlaying = false;
 	PlayerAudio playerAudio;
 	double progressvalue = 0.0;
-	bool isPlaying = false;
+
 
 	// GUI elements;
 	TextButton playPauseButton{ "Play" };

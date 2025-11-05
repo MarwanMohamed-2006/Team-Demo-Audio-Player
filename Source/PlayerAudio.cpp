@@ -14,7 +14,7 @@ PlayerAudio::~PlayerAudio()
 void PlayerAudio::prepareToPlay(int samplesPerBlockExpected, double sampleRate)
 {
     transportSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
-    resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
+	resampleSource.prepareToPlay(samplesPerBlockExpected, sampleRate);
 }
 
 void PlayerAudio::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill)
@@ -37,7 +37,7 @@ void PlayerAudio::getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferTo
 void PlayerAudio::releaseResources()
 {
     transportSource.releaseResources();
-    resampleSource.releaseResources();
+	resampleSource.releaseResources();
 }
 
 bool PlayerAudio::loadFile(const juce::File& file)

@@ -4,7 +4,7 @@
 
 MainComponent::MainComponent()
 {
-    backgroundImage = juce::ImageCache::getFromFile(juce::File("C:\\Users\\Administrator\\Downloads\\darkness birds.png"));
+    backgroundImage = juce::ImageCache::getFromFile(juce::File("C:\\Users\\Administrator\\Downloads\\space2.png"));
     addAndMakeVisible(player1);
     addAndMakeVisible(player2);
     setSize(1000, 500);
@@ -61,6 +61,6 @@ void MainComponent::paint(juce::Graphics& g)
         g.fillAll(juce::Colours::black);
     }
     int halfHeight = getHeight() / 2;
-    g.setColour(juce::Colours::black);
+    g.setColour(juce::Colours::darkblue);
     g.fillRect(0, halfHeight - 50, getWidth(), 10);
 }

@@ -7,7 +7,8 @@
 class SimpleAudioPlayer : public juce::JUCEApplication
 {
 public:
-    const juce::String getApplicationName() override { return "Team Demo Player"; }
+
+    const juce::String getApplicationName() override { return "Meteor Player"; }
     const juce::String getApplicationVersion() override { return "1.1"; }
 
     void initialise(const juce::String&) override
