@@ -1,5 +1,4 @@
-﻿
-#include "PlayerGUI.h"
+﻿#include "PlayerGUI.h"
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
 #include <juce_gui_basics/juce_gui_basics.h>
@@ -20,6 +19,7 @@ public:
 
     int getNumRows() override
     {
+        // The number of rows is the size of the playlist in PlayerAudio
         return (int)playerAudio.getPlaylist().size();
     }
 
@@ -27,10 +27,11 @@ public:
         int width, int height, bool rowIsSelected) override
     {
         if (rowIsSelected)
-            g.fillAll(juce::Colours::blue.withAlpha(0.5f)); 
+            g.fillAll(juce::Colours::blue.withAlpha(0.5f)); // Highlight selection
 
         if (rowNumber < getNumRows())
         {
+            // Display filename without extension
             const juce::File& file = playerAudio.getPlaylist()[rowNumber];
             g.setColour(juce::Colours::white);
             g.setFont(height * 0.7f);
@@ -42,6 +43,7 @@ public:
 
     void selectedRowsChanged(int lastRowSelected) override
     {
+        // When a row is selected (clicked), load and play that file
         if (lastRowSelected >= 0)
         {
             playerAudio.loadAndPlayFile(lastRowSelected);
@@ -122,8 +124,8 @@ PlayerGUI::PlayerGUI()
     speedSlider.setRange(0.5, 2.0, 0.01);
     speedSlider.setValue(1);
     speedSlider.addListener(this);
-	speedSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
-	speedSlider.setSliderStyle(juce::Slider::LinearVertical);
+    speedSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
+    speedSlider.setSliderStyle(juce::Slider::LinearVertical);
     addAndMakeVisible(speedSlider);
 
     // muted button 
@@ -164,7 +166,6 @@ PlayerGUI::PlayerGUI()
             }
             repaint();
         };
-
 }
 
 PlayerGUI::~PlayerGUI()
@@ -198,10 +199,10 @@ void PlayerGUI::resized()
     gotostartButton.setBounds(640, y, 100, 40);
     loopButton.setBounds(760, y, 80, 40);
 
-    volumeSlider.setBounds(500, 50, getWidth() - 40, 100);
-	speedSlider.setBounds(700, 50, getWidth() - 40, 100);
+    volumeSlider.setBounds(1500, 50, 50, 100);
+    speedSlider.setBounds(1550, 50, 50, 100);
     positionSlider.setBounds(20, 150, getWidth() - 40, 30);
-	display.setBounds(20, 210, getWidth() - 40, 20);
+    display.setBounds(20, 210, getWidth() - 40, 20);
     timeLabel.setBounds(20, 185, getWidth() - 40, 20);
 
     setA_Button.setBounds(860, y, 80, 40);
@@ -228,22 +229,26 @@ void PlayerGUI::buttonClicked(juce::Button* button)
 
         fileChooser->launchAsync(
             juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles | juce::FileBrowserComponent::canSelectMultipleItems,
+            // -----------------------------------------
 
             [this](const juce::FileChooser& fc)
             {
-                auto files = fc.getResults(); 
+                auto files = fc.getResults(); // Get ALL selected files
                 if (files.size() > 0)
                 {
                     size_t initialSize = playerAudio.getPlaylist().size();
 
+                    // Add files to the audio model
                     playerAudio.addFilesToPlaylist(files);
 
+                    // Force the ListBox to refresh its contents
                     playlistListBox.updateContent();
 
+                    // If the playlist was previously empty, load and play the first file
                     if (initialSize == 0)
                     {
                         playerAudio.loadAndPlayFile(0);
-                        playlistListBox.selectRow(0);
+                        playlistListBox.selectRow(0); // Highlight the first file
                     }
 
                     // Reset markers
@@ -368,9 +373,9 @@ void PlayerGUI::timerCallback()
         aMarkerPos = -1.0;
         bMarkerPos = -1.0;
     }
-    
 
-	updateProgressBar();
+
+    updateProgressBar();
 
     repaint();
 }
@@ -396,7 +401,7 @@ juce::String PlayerGUI::formatTime(double seconds)
 
 void PlayerGUI::paint(juce::Graphics& g)
 {
-    g.fillAll(juce::Colours::darkgrey.withAlpha(0.7f));
+    g.fillAll(juce::Colours::darkgrey);
 
     if (setAMarker && aMarkerPos >= 0.0)
     {
@@ -435,5 +440,3 @@ void PlayerGUI::paint(juce::Graphics& g)
         g.fillRect(startX, sliderBounds.getY(), endX - startX, sliderBounds.getHeight());
     }
 }
-
-

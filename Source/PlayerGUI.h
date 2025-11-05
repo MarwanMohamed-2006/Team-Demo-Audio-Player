@@ -23,8 +23,8 @@ public:
 	void paint(Graphics& g) override;
 	void timerCallback() override;
 	void updateProgressBar();
-	
-	
+
+
 
 
 	void prepareToPlay(int samplesPerBlockExpected, double sampleRate);
@@ -57,7 +57,6 @@ private:
 	Label timeLabel;
 	Label metadataLabel;
 	ProgressBar display{ progressvalue };
-
 
 	bool setAMarker = false;
 	bool setBMarker = false;
