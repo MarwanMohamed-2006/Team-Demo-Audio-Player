@@ -3,7 +3,7 @@
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
 
-// Our application class
+// Our application class 
 class SimpleAudioPlayer : public juce::JUCEApplication
 {
 public:
