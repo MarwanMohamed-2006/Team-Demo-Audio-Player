@@ -140,7 +140,7 @@ PlayerGUI::PlayerGUI()
     startTimerHz(20);
     addAndMakeVisible(display);
 
-    // loop button;;
+    // loop button
     loopButton.addListener(this);
     addAndMakeVisible(loopButton);
 
