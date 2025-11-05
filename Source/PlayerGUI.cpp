@@ -15,7 +15,7 @@ public:
 
     int getNumRows() override
     {
-        // The number of rows is the size of the playlist in PlayerAudio
+        // The number of rows is the size of the playlist in PlayerAudio//
         return (int)playerAudio.getPlaylist().size();
     }
 
