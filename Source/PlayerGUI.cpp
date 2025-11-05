@@ -15,7 +15,7 @@ public:
 
     int getNumRows() override
     {
-        // The number of rows is the size of the playlist in PlayerAudio
+        // The number of rows is the size of the playlist in PlayerAudio//
         return (int)playerAudio.getPlaylist().size();
     }
 
@@ -196,8 +196,12 @@ void PlayerGUI::resized()
     reset_speed.setBounds(getWidth() - 160, 125, 80, 30);  
 
 
+
     volumeSlider.setBounds(getWidth() - 200, 30, 50, 100);
     speedSlider.setBounds(getWidth() - 150, 30, 50, 100);   
+
+    volumeSlider.setBounds(900, 50, 50, 100);
+    speedSlider.setBounds(950, 50, 50, 100);
     positionSlider.setBounds(20, 150, getWidth() - 40, 30);
     display.setBounds(20, 210, getWidth() - 40, 20);
     timeLabel.setBounds(20, 185, getWidth() - 40, 20);
