@@ -8,10 +8,6 @@ using namespace std;
 using namespace juce;
 
 
-
-
-
-
 class PlaylistListBoxModel : public juce::ListBoxModel
 {
 public:
@@ -64,7 +60,7 @@ PlayerGUI::PlayerGUI()
     : playlistModel(std::make_unique<PlaylistListBoxModel>(playerAudio))
 {
     // Add buttons
-    for (auto* btn : { &loadButton, &endButton , &stopButton , &playButton , &muteButton, &gotostartButton,&setA_Button, &setB_Button, &clearABButton })
+    for (auto* btn : { &loadButton, &endButton , &stopButton , &playButton , &muteButton, &gotostartButton,&setA_Button, &setB_Button, &clearABButton,&reset_speed })
 
     {
         btn->addListener(this);
@@ -120,7 +116,7 @@ PlayerGUI::PlayerGUI()
     addAndMakeVisible(volumeSlider);
 
 
-    // Speed slider
+    // Speed slider 
     speedSlider.setRange(0.5, 2.0, 0.01);
     speedSlider.setValue(1);
     speedSlider.addListener(this);
@@ -316,6 +312,10 @@ void PlayerGUI::buttonClicked(juce::Button* button)
         bMarkerPos = -1.0;
         repaint();
     }
+    if (button == &reset_speed)
+    {
+		speedSlider.setValue(1.0);
+    }
 }
 
 void PlayerGUI::sliderValueChanged(juce::Slider* slider)
@@ -401,7 +401,7 @@ juce::String PlayerGUI::formatTime(double seconds)
 
 void PlayerGUI::paint(juce::Graphics& g)
 {
-    g.fillAll(juce::Colours::darkgrey);
+    //  g.fillAll(juce::Colours::darkgrey);
 
     if (setAMarker && aMarkerPos >= 0.0)
     {

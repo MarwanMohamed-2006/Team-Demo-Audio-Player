@@ -45,6 +45,7 @@ private:
 	TextButton muteButton;
 	ToggleButton loopButton{ "Loop" };
 	bool isLooping = false;
+	TextButton reset_speed{ "Speed Reset" };
 
 	TextButton setA_Button{ "Set A" };
 	TextButton setB_Button{ "Set B" };
