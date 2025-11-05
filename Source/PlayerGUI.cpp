@@ -197,7 +197,7 @@ void PlayerGUI::resized()
 
 
     volumeSlider.setBounds(getWidth() - 200, 30, 50, 100);
-    speedSlider.setBounds(getWidth() - 150, 30, 50, 100);   
+    speedSlider.setBounds(getWidth() - 150, 30, 50, 100);
     positionSlider.setBounds(20, 150, getWidth() - 40, 30);
     display.setBounds(20, 210, getWidth() - 40, 20);
     timeLabel.setBounds(20, 185, getWidth() - 40, 20);
