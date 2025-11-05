@@ -89,11 +89,11 @@ PlayerGUI::PlayerGUI()
         };
 
 
-    // A-B run checkbox
+   
     runABButton.addListener(this);
     addAndMakeVisible(runABButton);
 
-    // position slider
+   
     positionSlider.setRange(0.0, 1.0, 0.001);
     positionSlider.setValue(0.0);
     positionSlider.addListener(this);
@@ -107,7 +107,7 @@ PlayerGUI::PlayerGUI()
     timeLabel.setColour(juce::Label::textColourId, juce::Colours::white);
     addAndMakeVisible(timeLabel);
 
-    // Volume slider
+   
     volumeSlider.setRange(0.0, 1.0, 0.01);
     volumeSlider.setValue(0.5);
     volumeSlider.addListener(this);
@@ -116,7 +116,6 @@ PlayerGUI::PlayerGUI()
     addAndMakeVisible(volumeSlider);
 
 
-    // Speed slider 
     speedSlider.setRange(0.5, 2.0, 0.01);
     speedSlider.setValue(1);
     speedSlider.addListener(this);
@@ -124,7 +123,7 @@ PlayerGUI::PlayerGUI()
     speedSlider.setSliderStyle(juce::Slider::LinearVertical);
     addAndMakeVisible(speedSlider);
 
-    // muted button 
+    
     muteButton.setButtonText("Mute");
     muteButton.setToggleState(true, juce::dontSendNotification);
     muteButton.setClickingTogglesState(true);
@@ -136,11 +135,11 @@ PlayerGUI::PlayerGUI()
         };
     addAndMakeVisible(&muteButton);
 
-    //display progress bar
+    
     startTimerHz(20);
     addAndMakeVisible(display);
 
-    // loop button
+    
     loopButton.addListener(this);
     addAndMakeVisible(loopButton);
 
@@ -230,25 +229,25 @@ void PlayerGUI::buttonClicked(juce::Button* button)
 
             [this](const juce::FileChooser& fc)
             {
-                auto files = fc.getResults(); // Get ALL selected files
+                auto files = fc.getResults(); 
                 if (files.size() > 0)
                 {
                     size_t initialSize = playerAudio.getPlaylist().size();
 
-                    // Add files to the audio model
+                    
                     playerAudio.addFilesToPlaylist(files);
 
-                    // Force the ListBox to refresh its contents
+                    
                     playlistListBox.updateContent();
 
-                    // If the playlist was previously empty, load and play the first file
+                    
                     if (initialSize == 0)
                     {
                         playerAudio.loadAndPlayFile(0);
-                        playlistListBox.selectRow(0); // Highlight the first file
+                        playlistListBox.selectRow(0); 
                     }
 
-                    // Reset markers
+                   
                     setAMarker = false;
                     setBMarker = false;
                     aMarkerPos = -1.0;
@@ -407,7 +406,7 @@ juce::String PlayerGUI::formatTime(double seconds)
 
 void PlayerGUI::paint(juce::Graphics& g)
 {
-    //  g.fillAll(juce::Colours::darkgrey);
+    
 
     if (setAMarker && aMarkerPos >= 0.0)
     {
