@@ -34,7 +34,6 @@ public:
 	double getLoopEnd() const;
 	void clearABLoop();
 	juce::String getWildcardFiles() const;
-	void loadFile_2(const juce::File& file);
 
 	std::function<void(const juce::String& title,
 		const juce::String& artist)> onMetadataLoaded;
