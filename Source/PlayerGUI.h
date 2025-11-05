@@ -58,6 +58,7 @@ private:
 	Label metadataLabel;
 	ProgressBar display{ progressvalue };
 
+
 	bool setAMarker = false;
 	bool setBMarker = false;
 	double aMarkerPos = -1.0;

@@ -20,7 +20,6 @@ public:
 
     int getNumRows() override
     {
-        // The number of rows is the size of the playlist in PlayerAudio
         return (int)playerAudio.getPlaylist().size();
     }
 
@@ -28,11 +27,10 @@ public:
         int width, int height, bool rowIsSelected) override
     {
         if (rowIsSelected)
-            g.fillAll(juce::Colours::blue.withAlpha(0.5f)); // Highlight selection
+            g.fillAll(juce::Colours::blue.withAlpha(0.5f)); 
 
         if (rowNumber < getNumRows())
         {
-            // Display filename without extension
             const juce::File& file = playerAudio.getPlaylist()[rowNumber];
             g.setColour(juce::Colours::white);
             g.setFont(height * 0.7f);
@@ -44,7 +42,6 @@ public:
 
     void selectedRowsChanged(int lastRowSelected) override
     {
-        // When a row is selected (clicked), load and play that file
         if (lastRowSelected >= 0)
         {
             playerAudio.loadAndPlayFile(lastRowSelected);
@@ -167,6 +164,7 @@ PlayerGUI::PlayerGUI()
             }
             repaint();
         };
+
 }
 
 PlayerGUI::~PlayerGUI()
@@ -230,26 +228,22 @@ void PlayerGUI::buttonClicked(juce::Button* button)
 
         fileChooser->launchAsync(
             juce::FileBrowserComponent::openMode | juce::FileBrowserComponent::canSelectFiles | juce::FileBrowserComponent::canSelectMultipleItems,
-            // -----------------------------------------
 
             [this](const juce::FileChooser& fc)
             {
-                auto files = fc.getResults(); // Get ALL selected files
+                auto files = fc.getResults(); 
                 if (files.size() > 0)
                 {
                     size_t initialSize = playerAudio.getPlaylist().size();
 
-                    // Add files to the audio model
                     playerAudio.addFilesToPlaylist(files);
 
-                    // Force the ListBox to refresh its contents
                     playlistListBox.updateContent();
 
-                    // If the playlist was previously empty, load and play the first file
                     if (initialSize == 0)
                     {
                         playerAudio.loadAndPlayFile(0);
-                        playlistListBox.selectRow(0); // Highlight the first file
+                        playlistListBox.selectRow(0);
                     }
 
                     // Reset markers
@@ -402,7 +396,7 @@ juce::String PlayerGUI::formatTime(double seconds)
 
 void PlayerGUI::paint(juce::Graphics& g)
 {
-    g.fillAll(juce::Colours::darkgrey);
+    g.fillAll(juce::Colours::darkgrey.withAlpha(0.7f));
 
     if (setAMarker && aMarkerPos >= 0.0)
     {

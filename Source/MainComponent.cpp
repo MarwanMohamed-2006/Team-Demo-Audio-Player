@@ -4,6 +4,7 @@
 
 MainComponent::MainComponent()
 {
+    backgroundImage = juce::ImageCache::getFromFile(juce::File("C:\\Users\\Administrator\\Downloads\\darkness birds.png"));
 
     addAndMakeVisible(player1);
     addAndMakeVisible(player2);
@@ -26,14 +27,8 @@ void MainComponent::getNextAudioBlock(const juce::AudioSourceChannelInfo& buffer
 {
     bufferToFill.clearActiveBufferRegion();
     player1.getNextAudioBlock(bufferToFill);
-    juce::AudioBuffer<float> tempBuffer(bufferToFill.buffer->getNumChannels(),bufferToFill.numSamples);
-    juce::AudioSourceChannelInfo tempbuffer(&tempBuffer, 0, bufferToFill.numSamples);
-        
-    player2.getNextAudioBlock(tempbuffer);
-    for (int channel = 0; channel < bufferToFill.buffer->getNumChannels(); ++channel)
-    {
-        bufferToFill.buffer->addFrom(channel,bufferToFill.startSample,tempBuffer,channel,0,bufferToFill.numSamples);
-    }
+    player2.getNextAudioBlock(bufferToFill);
+    
 }
 
 
@@ -44,9 +39,20 @@ void MainComponent::releaseResources()
 }
 
 
-void MainComponent::resized()
+void MainComponent::resized() 
 {
     int halfHeight = getHeight() / 2;
     player1.setBounds(0, 0, getWidth(), halfHeight);
     player2.setBounds(0, halfHeight, getWidth(), getHeight() - halfHeight);
+}
+void MainComponent::paint(juce::Graphics& g)
+{
+    if (backgroundImage.isValid())
+    {
+        g.drawImage(backgroundImage, getLocalBounds().toFloat());
+    }
+    else
+    {
+        g.fillAll(juce::Colours::black);
+    }
 }
