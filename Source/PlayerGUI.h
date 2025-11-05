@@ -35,10 +35,10 @@ private:
 
 	PlayerAudio playerAudio;
 	double progressvalue = 0.0;
+	bool isPlaying = false;
 
 	// GUI elements;
-	TextButton stopButton{ "Stop" };
-	TextButton playButton{ "play" };
+	TextButton playPauseButton{ "Play" };
 	TextButton loadButton{ "Load File" };
 	TextButton gotostartButton{ "go to start" };
 	TextButton endButton{ "End" };
