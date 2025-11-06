@@ -68,7 +68,7 @@ PlayerGUI::PlayerGUI()
         btn->setColour(juce::TextButton::textColourOffId, juce::Colours::black);
         btn->setColour(juce::TextButton::buttonColourId, juce::Colours::white);
     }
-   
+
     loopButton.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
     loopButton.setColour(juce::TextButton::buttonColourId, juce::Colours::white);
     runABButton.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
@@ -84,7 +84,7 @@ PlayerGUI::PlayerGUI()
     addAndMakeVisible(metadataLabel);
     metadataLabel.setText("No file loaded", juce::dontSendNotification);
     metadataLabel.setJustificationType(juce::Justification::centredLeft);
-    metadataLabel.setColour(juce::Label::textColourId, juce::Colours::yellow);
+    metadataLabel.setColour(juce::Label::textColourId, juce::Colours::white);
     addAndMakeVisible(metadataLabel);
 
 
@@ -95,15 +95,17 @@ PlayerGUI::PlayerGUI()
         };
 
 
-   
+
     runABButton.addListener(this);
     addAndMakeVisible(runABButton);
 
-   
+
     positionSlider.setRange(0.0, 1.0, 0.001);
     positionSlider.setValue(0.0);
     positionSlider.addListener(this);
     positionSlider.setSliderStyle(juce::Slider::LinearHorizontal);
+    positionSlider.setColour(juce::Slider::backgroundColourId, juce::Colours::darkgrey);
+
     positionSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
     addAndMakeVisible(positionSlider);
     startTimer(100);
@@ -113,12 +115,14 @@ PlayerGUI::PlayerGUI()
     timeLabel.setColour(juce::Label::textColourId, juce::Colours::white);
     addAndMakeVisible(timeLabel);
 
-   
+
     volumeSlider.setRange(0.0, 1.0, 0.01);
     volumeSlider.setValue(0.5);
     volumeSlider.addListener(this);
     volumeSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
     volumeSlider.setSliderStyle(juce::Slider::LinearBarVertical);
+    volumeSlider.setColour(juce::Slider::trackColourId, juce::Colours::white);
+
     addAndMakeVisible(volumeSlider);
 
 
@@ -126,15 +130,19 @@ PlayerGUI::PlayerGUI()
     speedSlider.setValue(1);
     speedSlider.addListener(this);
     speedSlider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
-    speedSlider.setSliderStyle(juce::Slider::LinearVertical);
+    speedSlider.setSliderStyle(juce::Slider::Rotary); 
+    speedSlider.setColour(juce::Slider::rotarySliderFillColourId, juce::Colours::white);
+    speedSlider.setColour(juce::Slider::rotarySliderOutlineColourId, juce::Colours::darkgrey);
+    speedSlider.setColour(juce::Slider::thumbColourId, juce::Colours::lightgrey);
+    speedSlider.setLookAndFeel(&circularLookAndFeel);
     addAndMakeVisible(speedSlider);
 
-    
+
     muteButton.setButtonText("Mute");
     muteButton.setToggleState(true, juce::dontSendNotification);
     muteButton.setClickingTogglesState(true);
-    muteButton.setColour(juce::TextButton::buttonOnColourId, juce::Colours::red);
-    muteButton.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
+    muteButton.setColour(juce::TextButton::buttonOnColourId, juce::Colours::white);
+    muteButton.setColour(juce::TextButton::textColourOnId, juce::Colours::red);
 
 
     muteButton.onClick = [this]() {
@@ -144,11 +152,11 @@ PlayerGUI::PlayerGUI()
         };
     addAndMakeVisible(&muteButton);
 
-    
+
     startTimerHz(20);
     addAndMakeVisible(display);
 
-    
+
     loopButton.addListener(this);
     addAndMakeVisible(loopButton);
 
@@ -198,14 +206,14 @@ void PlayerGUI::resized()
     loadButton.setBounds(20, y, 100, 40);
     playPauseButton.setBounds(240, y, 80, 40);
     muteButton.setBounds(340, y, 80, 40);
-    endButton.setBounds(540, y, 80, 40);
-    gotostartButton.setBounds(640, y, 100, 40);
+    gotostartButton.setBounds(540, y, 80, 40);
+    endButton.setBounds(640, y, 100, 40);
     loopButton.setBounds(760, y, 80, 40);
-    reset_speed.setBounds(getWidth() - 160, 125, 80, 30);  
+    reset_speed.setBounds(getWidth() - 150, 125, 80, 30);
 
 
     volumeSlider.setBounds(getWidth() - 200, 30, 20, 100);
-    speedSlider.setBounds(getWidth() - 150, 30, 50, 100);
+    speedSlider.setBounds(getWidth() - 150, 30, 80, 80);
     positionSlider.setBounds(20, 150, getWidth() - 40, 30);
     display.setBounds(20, 210, getWidth() - 40, 20);
     timeLabel.setBounds(20, 185, getWidth() - 40, 20);
@@ -238,25 +246,25 @@ void PlayerGUI::buttonClicked(juce::Button* button)
 
             [this](const juce::FileChooser& fc)
             {
-                auto files = fc.getResults(); 
+                auto files = fc.getResults();
                 if (files.size() > 0)
                 {
                     size_t initialSize = playerAudio.getPlaylist().size();
 
-                    
+
                     playerAudio.addFilesToPlaylist(files);
 
-                    
+
                     playlistListBox.updateContent();
 
-                    
+
                     if (initialSize == 0)
                     {
                         playerAudio.loadAndPlayFile(0);
-                        playlistListBox.selectRow(0); 
+                        playlistListBox.selectRow(0);
                     }
 
-                   
+
                     setAMarker = false;
                     setBMarker = false;
                     aMarkerPos = -1.0;
@@ -273,13 +281,13 @@ void PlayerGUI::buttonClicked(juce::Button* button)
         {
             playerAudio.stop();
             playPauseButton.setButtonText("Play");
-            isPlaying = false; 
+            isPlaying = false;
         }
         else
         {
             playerAudio.start();
             playPauseButton.setButtonText("Pause");
-            isPlaying = true; 
+            isPlaying = true;
         }
     }
 
@@ -328,7 +336,7 @@ void PlayerGUI::buttonClicked(juce::Button* button)
     }
     if (button == &reset_speed)
     {
-		speedSlider.setValue(1.0);
+        speedSlider.setValue(1.0);
     }
 }
 
@@ -415,7 +423,7 @@ juce::String PlayerGUI::formatTime(double seconds)
 
 void PlayerGUI::paint(juce::Graphics& g)
 {
-    
+    g.fillAll(juce::Colours::black);
 
     if (setAMarker && aMarkerPos >= 0.0)
     {

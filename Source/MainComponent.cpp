@@ -4,7 +4,6 @@
 
 MainComponent::MainComponent()
 {
-    backgroundImage = juce::ImageCache::getFromFile(juce::File("C:\\Users\\Administrator\\Downloads\\space2.png"));
     addAndMakeVisible(player1);
     addAndMakeVisible(player2);
     setSize(1000, 500);
@@ -46,21 +45,15 @@ void MainComponent::releaseResources()
 
 void MainComponent::resized()
 {
+    int gap = 4;
     int halfHeight = getHeight() / 2;
-    player1.setBounds(0, 0, getWidth(), halfHeight);
-    player2.setBounds(0, halfHeight, getWidth(), getHeight() - halfHeight);
+    
+    player1.setBounds(0, 0, getWidth(), halfHeight - gap / 2);
+    player2.setBounds(0, halfHeight + gap / 2, getWidth(), getHeight() - halfHeight - gap / 2);
 }
 void MainComponent::paint(juce::Graphics& g)
 {
-    if (backgroundImage.isValid())
-    {
-        g.drawImage(backgroundImage, getLocalBounds().toFloat());
-    }
-    else
-    {
-        g.fillAll(juce::Colours::black);
-    }
-    int halfHeight = getHeight() / 2;
-    g.setColour(juce::Colours::darkblue);
-    g.fillRect(0, halfHeight - 50, getWidth(), 10);
+    g.setColour(juce::Colours::white);
+    int line_pos = getHeight() / 2;
+    g.fillRect(0, line_pos , getWidth(), 4);
 }

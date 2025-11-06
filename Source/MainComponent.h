@@ -12,10 +12,9 @@ public:
     void getNextAudioBlock(const juce::AudioSourceChannelInfo& bufferToFill) override;
     void releaseResources() override;
     void resized() override;
-    void paint(juce::Graphics& g) override;
+	void paint(juce::Graphics& g) override;
 private:
     PlayerGUI player1;
     PlayerGUI player2;
-    juce::Image backgroundImage;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainComponent)
 };
