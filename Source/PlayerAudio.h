@@ -33,6 +33,8 @@ public:
 	double getLoopStart() const;
 	double getLoopEnd() const;
 	void clearABLoop();
+	int getCurrentIndex() const;
+
 	juce::String getWildcardFiles() const;
 
 	std::function<void(const juce::String& title,

@@ -164,6 +164,11 @@ void PlayerAudio::clearABLoop()
     loopEndTime = length > 0.0 ? length : 0.0;
 }
 
+int PlayerAudio::getCurrentIndex() const
+{
+    return currentFileIndex;
+}
+
 
 void PlayerAudio::extractMetadata(const juce::File& file)
 {

@@ -61,6 +61,7 @@ public:
 
 	void resized() override;
 	void paint(Graphics& g) override;
+	void playNextSong();
 	void timerCallback() override;
 	void updateProgressBar();
 

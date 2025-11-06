@@ -370,6 +370,12 @@ void PlayerGUI::timerCallback()
         double current_pos = playerAudio.getPosition();
         double new_pos = current_pos / length;
 
+        if (!isLooping && !playerAudio.isABLoopEnabled() && (current_pos >= length - 0.05)) 
+        {
+            playNextSong();
+            return;
+        }
+
         if (!positionSlider.isMouseButtonDown())
         {
             positionSlider.setValue(new_pos);
@@ -460,5 +466,22 @@ void PlayerGUI::paint(juce::Graphics& g)
 
         g.setColour(Colours::yellow.withAlpha(0.3f));
         g.fillRect(startX, sliderBounds.getY(), endX - startX, sliderBounds.getHeight());
+    }
+}
+void PlayerGUI::playNextSong()
+{
+    auto& playlist = playerAudio.getPlaylist();
+    int currentIndex = playerAudio.getCurrentIndex();
+
+    if (currentIndex >= 0 && currentIndex + 1 < (int)playlist.size())
+    {
+        int nextIndex = currentIndex + 1;
+        playerAudio.loadAndPlayFile(nextIndex);
+        playlistListBox.selectRow(nextIndex);
+    }
+    else
+    {
+        isPlaying = false;
+        playPauseButton.setButtonText("Play");
     }
 }
