@@ -1,7 +1,7 @@
 ﻿#include "PlayerAudio.h"
 #include <taglib/fileref.h>
 #include <taglib/tag.h>
-//
+
 PlayerAudio::PlayerAudio()
 {
     formatManager.registerBasicFormats();
@@ -162,6 +162,11 @@ void PlayerAudio::clearABLoop()
     loopStartTime = 0.0;
     double length = getLength();
     loopEndTime = length > 0.0 ? length : 0.0;
+}
+
+int PlayerAudio::getCurrentIndex() const
+{
+    return currentFileIndex;
 }
 
 
