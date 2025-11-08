@@ -54,7 +54,7 @@ void MainComponent::resized()
 
 void MainComponent::paint(juce::Graphics& g)
 {
-    g.setColour(juce::Colours::red);
+    g.setColour(juce::Colours::cornsilk);
     int line_pos = getWidth() / 2;
     g.fillRect(line_pos - 2, 0, 4, getHeight());
 }
