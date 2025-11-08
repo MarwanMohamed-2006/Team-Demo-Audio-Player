@@ -200,8 +200,8 @@ void PlayerGUI::resized()
     gotostartButton.setBounds(640, y, 100, 40);
     loopButton.setBounds(760, y, 80, 40);
 
-    volumeSlider.setBounds(500, 50, getWidth() - 40, 100);
-	speedSlider.setBounds(700, 50, getWidth() - 40, 100);
+    volumeSlider.setBounds(500, 50, 50, 150);   // Width = 50 instead of full screen
+    speedSlider.setBounds(560, 50, 50, 150);    // Put it next to volume slider
     positionSlider.setBounds(20, 150, getWidth() - 40, 30);
 	display.setBounds(20, 210, getWidth() - 40, 20);
     timeLabel.setBounds(20, 185, getWidth() - 40, 20);
