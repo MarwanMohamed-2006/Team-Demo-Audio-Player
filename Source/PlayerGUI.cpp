@@ -88,10 +88,15 @@ PlayerGUI::PlayerGUI()
     addAndMakeVisible(metadataLabel);
 
 
-    playerAudio.onMetadataLoaded = [this](const juce::String& title, const juce::String& artist)
+    playerAudio.onMetadataLoaded = [this](const juce::String& title
+                                        , const juce::String& artist
+                                        , const juce::String& album)
         {
-            juce::String metadata = artist.isEmpty() ? title : (title + " - " + artist);
-            metadataLabel.setText("Now Playing: " + metadata, juce::dontSendNotification);
+            juce::String metadata =
+                                    "Title: " + title + "\n" +
+                                    "Artist: " + artist + "\n" +
+                                    "Album: " + album;
+            metadataLabel.setText(metadata, juce::dontSendNotification);
         };
 
 
@@ -202,29 +207,29 @@ void PlayerGUI::releaseResources()
 
 void PlayerGUI::resized()
 {
-    int y = 20;
-    loadButton.setBounds(20, y, 100, 40);
-    playPauseButton.setBounds(240, y, 80, 40);
-    muteButton.setBounds(340, y, 80, 40);
-    gotostartButton.setBounds(540, y, 80, 40);
-    endButton.setBounds(640, y, 100, 40);
-    loopButton.setBounds(760, y, 80, 40);
-    reset_speed.setBounds(getWidth() - 150, 125, 80, 30);
+    loadButton.setBounds(20, 20, 100, 40);
+    metadataLabel.setBounds(20, 100, getWidth() - 40, 80);
 
+    gotostartButton.setBounds(60, 260, 200, 45);
+    playPauseButton.setBounds(300, 260, 200, 45);
+    endButton.setBounds(540, 260, 200, 45);
+    muteButton.setBounds(540, 400, 70, 30);
 
-    volumeSlider.setBounds(getWidth() - 200, 30, 20, 100);
-    speedSlider.setBounds(getWidth() - 150, 30, 80, 80);
-    positionSlider.setBounds(20, 150, getWidth() - 40, 30);
-    display.setBounds(20, 210, getWidth() - 40, 20);
-    timeLabel.setBounds(20, 185, getWidth() - 40, 20);
+    volumeSlider.setBounds(560, 315, 20, 80); 
+    speedSlider.setBounds(620, 310, 80, 80);
+    reset_speed.setBounds(620, 400, 80, 30);
 
-    setA_Button.setBounds(860, y, 80, 40);
-    setB_Button.setBounds(960, y, 80, 40);
-    clearABButton.setBounds(1060, y, 100, 40);
-    runABButton.setBounds(1160, y, 100, 40);
+    positionSlider.setBounds(20, 180, getWidth() - 40, 30);
+    timeLabel.setBounds(20, 150, getWidth() - 40, 20);
+    display.setBounds(20, 220, getWidth() - 40, 20);
 
-    metadataLabel.setBounds(20, y + 50, getWidth() - 40, 30);
-    playlistListBox.setBounds(20, 250, getWidth() - 40, 150);
+    setA_Button.setBounds(20, 360, 80, 40);
+    setB_Button.setBounds(110, 360, 80, 40);
+    clearABButton.setBounds(200, 360, 100, 40);
+    runABButton.setBounds(310, 360, 100, 40);
+    loopButton.setBounds(420, 360, 80, 40);
+
+    playlistListBox.setBounds(20, 450, getWidth() - 40, 200);
 }
 
 void PlayerGUI::buttonClicked(juce::Button* button)

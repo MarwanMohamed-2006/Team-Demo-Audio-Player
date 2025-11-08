@@ -46,14 +46,15 @@ void MainComponent::releaseResources()
 void MainComponent::resized()
 {
     int gap = 4;
-    int halfHeight = getHeight() / 2;
-    
-    player1.setBounds(0, 0, getWidth(), halfHeight - gap / 2);
-    player2.setBounds(0, halfHeight + gap / 2, getWidth(), getHeight() - halfHeight - gap / 2);
+    int halfWidth = getWidth() / 2;
+
+    player1.setBounds(0, 0, halfWidth - gap / 2, getHeight());
+    player2.setBounds(halfWidth + gap / 2, 0, getWidth() - halfWidth - gap / 2, getHeight());
 }
+
 void MainComponent::paint(juce::Graphics& g)
 {
-    g.setColour(juce::Colours::white);
-    int line_pos = getHeight() / 2;
-    g.fillRect(0, line_pos , getWidth(), 4);
+    g.setColour(juce::Colours::red);
+    int line_pos = getWidth() / 2;
+    g.fillRect(line_pos - 2, 0, 4, getHeight());
 }

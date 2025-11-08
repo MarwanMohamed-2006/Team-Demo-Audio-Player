@@ -179,16 +179,17 @@ void PlayerAudio::extractMetadata(const juce::File& file)
     {
 
         if (onMetadataLoaded)
-            onMetadataLoaded(file.getFileNameWithoutExtension(), "Unknown Artist");
+            onMetadataLoaded(file.getFileNameWithoutExtension(), "Unknown Artist" , "Unknown Album");
     }
     else
     {
 
         juce::String title = f.tag()->title().isEmpty() ? file.getFileNameWithoutExtension() : juce::String::fromUTF8(f.tag()->title().toCString(true));
-        juce::String artist = juce::String::fromUTF8(f.tag()->artist().toCString(true));
+        juce::String artist = f.tag()->artist().isEmpty() ? "Unknown artist" : juce::String::fromUTF8(f.tag()->artist().toCString(true));
+        juce::String album = f.tag()->album().isEmpty() ? "Unknown Album" : juce::String::fromUTF8(f.tag()->album().toCString(true));
 
         if (onMetadataLoaded)
-            onMetadataLoaded(title, artist);
+            onMetadataLoaded(title, artist,album);
     }
 
 }

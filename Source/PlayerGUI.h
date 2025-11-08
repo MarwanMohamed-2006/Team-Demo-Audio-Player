@@ -81,7 +81,7 @@ private:
 	// GUI elements;
 	TextButton playPauseButton{ "Pause" };
 	TextButton loadButton{ "Load File" };
-	TextButton gotostartButton{ "go to start" };
+	TextButton gotostartButton{ "Restart" };
 	TextButton endButton{ "End" };
 	TextButton muteButton;
 	ToggleButton loopButton{ "Loop" };

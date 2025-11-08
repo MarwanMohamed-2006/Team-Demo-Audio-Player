@@ -38,7 +38,8 @@ public:
 	juce::String getWildcardFiles() const;
 
 	std::function<void(const juce::String& title,
-		const juce::String& artist)> onMetadataLoaded;
+		const juce::String& artist,
+		const juce::String& album)> onMetadataLoaded;
 
 	void extractMetadata(const juce::File& file);
 
