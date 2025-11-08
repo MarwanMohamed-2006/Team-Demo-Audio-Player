@@ -58,7 +58,7 @@ PlayerGUI::PlayerGUI()
     auto color4 = Colours::whitesmoke;
     auto color5 = Colours::darkslategrey;
 
-    // Configure all buttons with modern styling
+    
     for (auto* btn : { &loadButton, &endButton, &playPauseButton, &muteButton,
                        &gotostartButton, &setA_Button, &setB_Button,
                        &clearABButton, &reset_speed })
@@ -71,19 +71,19 @@ PlayerGUI::PlayerGUI()
         btn->setColour(juce::TextButton::buttonOnColourId, color1);
     }
 
-    // Loop button styling
+    // Loop button 
     loopButton.setColour(juce::TextButton::textColourOffId, color4);
     loopButton.setColour(juce::TextButton::buttonColourId, color5);
     loopButton.setColour(juce::TextButton::textColourOnId, Colours::white);
     loopButton.setColour(juce::TextButton::buttonOnColourId, Colours::limegreen); 
 
-    // AB Loop button styling
+    // AB Loop button 
     runABButton.setColour(juce::TextButton::textColourOffId, color4);
     runABButton.setColour(juce::TextButton::buttonColourId, color5);
     runABButton.setColour(juce::TextButton::textColourOnId, Colours::white);
     runABButton.setColour(juce::TextButton::buttonOnColourId, Colours::darkorange); 
 
-    // Playlist styling
+    // Playlist 
     playlistListBox.setModel(playlistModel.get());
     playlistListBox.setColour(juce::ListBox::backgroundColourId, Colour(0xff2c3e50));
     playlistListBox.setColour(juce::ListBox::outlineColourId, Colours::darkslategrey);
@@ -110,7 +110,7 @@ PlayerGUI::PlayerGUI()
     runABButton.addListener(this);
     addAndMakeVisible(runABButton);
 
-    // Position slider styling
+    // Position slider 
     positionSlider.setRange(0.0, 1.0, 0.001);
     positionSlider.setValue(0.0);
     positionSlider.addListener(this);
@@ -128,7 +128,7 @@ PlayerGUI::PlayerGUI()
     timeLabel.setColour(juce::Label::textColourId, color4);
     addAndMakeVisible(timeLabel);
 
-    // Volume slider styling
+    // Volume slider 
     volumeSlider.setRange(0.0, 1.0, 0.01);
     volumeSlider.setValue(0.5);
     volumeSlider.addListener(this);
@@ -138,7 +138,7 @@ PlayerGUI::PlayerGUI()
     volumeSlider.setColour(juce::Slider::backgroundColourId, Colours::darkslategrey);
     addAndMakeVisible(volumeSlider);
 
-    // Speed slider styling
+    // Speed slider 
     speedSlider.setRange(0.5, 2.0, 0.01);
     speedSlider.setValue(1);
     speedSlider.addListener(this);
@@ -166,7 +166,7 @@ PlayerGUI::PlayerGUI()
 
     startTimerHz(20);
 
-    // Progress bar styling
+    // Progress bar 
     display.setColour(juce::ProgressBar::backgroundColourId, Colours::darkslategrey);
     display.setColour(juce::ProgressBar::foregroundColourId, color1);
     addAndMakeVisible(display);
@@ -430,7 +430,6 @@ juce::String PlayerGUI::formatTime(double seconds)
 
 void PlayerGUI::paint(juce::Graphics& g)
 {
-    // Modern gradient background using JUCE colors
     juce::ColourGradient gradient(Colours::darkgrey, 0, 0,
         Colours::darkslategrey, 0, (float)getHeight(),
         false);
